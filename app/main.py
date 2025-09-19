@@ -1,32 +1,26 @@
-from contextlib import asynccontextmanager
 from fastapi import FastAPI
-
+from sqlmodel import SQLModel
 from app.core.config import settings
 from app.core.logging import setup_logging
-from app.routers.categories import router as categories_router
-from app.db.init_db import init_db
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    #  앱이 켜질 때 1번
-    setup_logging(settings.DEBUG)
-    init_db()
-    # (필요하면) DB 초기화, 연결 풀 준비 등
-
-    # 앱이 돌아가는 동안
-    yield
-
-    #  앱이 꺼질 때 1번
-    # (필요하면) DB 연결 정리 등
+from app.db.session import engine
+from app.routers.category import router as category_router
 
 def create_app() -> FastAPI:
-    api = FastAPI(title=settings.APP_NAME, lifespan=lifespan)
+    setup_logging()
+    app = FastAPI(
+        title=settings.PROJECT_NAME,
+        version=settings.VERSION,
+    )
 
-    @api.get("/health", tags=["system"])
+    @app.get("/health")
     def health():
         return {"status": "ok"}
 
-    #  라우터 연결 (동작)
-    api.include_router(categories_router, prefix="/api")
+    app.include_router(category_router)
 
-    return api
+    if settings.AUTO_CREATE_TABLES:
+        SQLModel.metadata.create_all(engine)
+
+    return app
+
+app = create_app()

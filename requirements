@@ -1,0 +1,9 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+sqlmodel>=0.0.22
+SQLAlchemy>=2.0.30
+pydantic>=2.7.0
+pydantic-settings>=2.3.4
+python-dotenv>=1.0.1
+psycopg[binary]>=3.2.1 ; platform_system != 'Windows'
+psycopg>=3.2.1 ; platform_system == 'Windows'
