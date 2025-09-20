@@ -4,6 +4,7 @@ from app.core.config import settings
 from app.core.logging import setup_logging
 from app.db.session import engine
 from app.routers.category import router as category_router
+from app.routers.auth import router as auth_router
 
 def create_app() -> FastAPI:
     setup_logging()
@@ -17,7 +18,7 @@ def create_app() -> FastAPI:
         return {"status": "ok"}
 
     app.include_router(category_router)
-
+    app.include_router(auth_router)
     if settings.AUTO_CREATE_TABLES:
         SQLModel.metadata.create_all(engine)
 
