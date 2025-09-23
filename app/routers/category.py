@@ -6,9 +6,9 @@ from app.db.session import get_db
 from app.models.category import Category
 from app.schemas.category import CategoryCreate, CategoryRead
 
-router = APIRouter(prefix="/categories", tags=["categories"])
+router = APIRouter(prefix="/category", tags=["category"])
 
-@router.get("", response_model=List[CategoryRead], summary="List Categories")
+@router.get("", response_model=List[CategoryRead], summary="List Category")
 def list_categories(
     db: Session = Depends(get_db),
     skip: int = Query(0, ge=0),
