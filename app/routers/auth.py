@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from jose import ExpiredSignatureError, JWTError
 from pydantic import BaseModel, EmailStr
 from sqlmodel import Session, select
 
@@ -25,11 +26,8 @@ def signup(body: UserCreate, db: Session = Depends(get_db)):
 
 
 class LoginRequest(BaseModel):
-
-
     email: EmailStr
-password: str
-
+    password: str
 
 @router.post("/login", response_model=Token)
 def login(body: LoginRequest, db: Session = Depends(get_db)):
@@ -49,8 +47,10 @@ def get_current_user(
     try:
         data = decode_token(token)
         user_id = int(data.get("sub"))
-    except Exception:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Expired token") #에러 명확하게 전달
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
 
     user = db.get(User, user_id)
     if not user:
@@ -62,7 +62,3 @@ def get_current_user(
 def me(current_user: User = Depends(get_current_user)):
     return current_user
 
-
-@router.get("/protected")
-def protected(current_user: User = Depends(get_current_user)):
-    return {"message": f"hello {current_user.email}"}

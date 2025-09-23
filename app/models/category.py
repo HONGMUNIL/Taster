@@ -9,7 +9,7 @@ class CategoryBase(SQLModel):
     description: Optional[str] = None
 
 class Category(CategoryBase, table=True):
-    __tablename__ = "categories"
+    __tablename__ = "category"
 
     id: Optional[int] = Field(default=None, primary_key=True)
 

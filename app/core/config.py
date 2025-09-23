@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     #JWT 토큰 키
     JWT_SECRET: str = "change-me"
     JWT_ALG: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 43200
 
     model_config = SettingsConfigDict(
         env_file=".env",
