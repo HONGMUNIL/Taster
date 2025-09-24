@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.db.session import init_db
-from app.routers import auth, category
+from app.routers import auth, category, area, place
 
 
 @asynccontextmanager
@@ -30,6 +30,8 @@ def health():
 # 기능(라우터) 연결
 app.include_router(auth.router)
 app.include_router(category.router)
+app.include_router(area.router)
+app.include_router(place.router)
 
 # 로컬 실행용 (선택)
 if __name__ == "__main__":

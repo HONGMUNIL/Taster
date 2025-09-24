@@ -7,7 +7,7 @@ from sqlmodel import SQLModel, Field
 
 class Place(SQLModel, table=True):
     __tablename__ = "places"
-    __table_args__ = (UniqueConstraint("name", name="uq_place_name"))
+    __table_args__ = (UniqueConstraint("name", name="uq_place_name"),)
 
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True)
