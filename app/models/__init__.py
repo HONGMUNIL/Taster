@@ -2,6 +2,7 @@
 from .area import Area
 from .place import Place
 from .user import User
+from .review import Review
 
 
 # Category가 이미 있다면 함께 등록
@@ -11,4 +12,4 @@ try:
 except Exception:
     Category = None
 
-__all__ = ["User", "Category", "Area", "Place"]
+__all__ = ["User", "Category", "Area", "Place", "Review"]

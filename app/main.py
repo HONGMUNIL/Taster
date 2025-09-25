@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.db.session import init_db
-from app.routers import auth, category, area, place
+from app.routers import auth, category, area, place, review
 
 
 @asynccontextmanager
@@ -32,6 +32,7 @@ app.include_router(auth.router)
 app.include_router(category.router)
 app.include_router(area.router)
 app.include_router(place.router)
+app.include_router(review.router)
 
 # 로컬 실행용 (선택)
 if __name__ == "__main__":

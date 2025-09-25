@@ -6,7 +6,7 @@ from sqlmodel import SQLModel, Field
 
 
 class User(SQLModel, table=True):
-    __tablename__= "user"
+    __tablename__= "users"
     __table_args__=(UniqueConstraint("email", name="uq_user_email"),)
 
     id: Optional[int] = Field(default=None, primary_key=True)
