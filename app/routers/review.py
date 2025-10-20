@@ -18,8 +18,8 @@ def create_review(
         current_user: User = Depends(get_current_user),
         db: Session = Depends(get_db),
 ):
-    if len(body.body) < 20:
-        raise HTTPException(status_code=400, detail="리뷰 글자수는 최소 20자 입니다.")
+    if len(body.body) < 10:
+        raise HTTPException(status_code=400, detail="리뷰 글자수는 최소 10자 입니다.")
 
     # 1) 가게 존재 확인
     place = db.get(Place, body.place_id)
