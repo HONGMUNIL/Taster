@@ -15,7 +15,7 @@ from app.core.errors import (
 )
 
 from app.db.session import init_db
-from app.routers import auth, category, area, place, review
+from app.routers import auth, category, area, place, review, ranking
 
 
 @asynccontextmanager
@@ -35,7 +35,7 @@ app = FastAPI(
 #  요청마다 trace_id 달아주는 미들웨어 추가
 app.add_middleware(TraceIDMiddleware)
 
-# 예외 핸들러 등록 (HTTPException / 422검증오류 / 나머지모든에러)
+# 예외 핸들러
 app.add_exception_handler(StarletteHTTPException, http_exception_handler)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(Exception, unhandled_exception_handler)
@@ -45,12 +45,13 @@ app.add_exception_handler(Exception, unhandled_exception_handler)
 def health():
     return {"ok": True}
 
-# 기능(라우터) 연결
+# 기능 연결
 app.include_router(auth.router)
 app.include_router(category.router)
 app.include_router(area.router)
 app.include_router(place.router)
 app.include_router(review.router)
+app.include_router(ranking.router)
 
 # 로컬 실행용
 if __name__ == "__main__":
