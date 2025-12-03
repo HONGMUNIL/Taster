@@ -18,4 +18,7 @@ class ReviewRead(BaseModel):
 
     author_email: Optional[str] = None
 
+class ReviewUpdate(BaseModel):
+    rating: int
+    body: str
 
