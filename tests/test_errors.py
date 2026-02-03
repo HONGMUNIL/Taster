@@ -1,3 +1,40 @@
+from dbm import error
+
+from starlette.testclient import TestClient
+
+
+def test_create_category_duplicate_name(client: TestClient):
+    # 카테고리 생성
+    resp1 = client.post(
+        "/category",
+        json={"name": "라멘", "description": "라멘 가게"},
+
+    )
+    assert resp1.status_code ==201
+    data1 = resp1.json()
+    assert  data1["name"] == "라멘"
+
+    # 같은 이름으로 다시 생성 + 409에러 나와야함
+    resp2 = client.post(
+        "/category",
+        json={"name": "라멘", "description": "이상한 다른 설명"},
+    )
+    assert resp2.status_code == 409
+
+    # 에러 응답 포멧
+    body = resp2.json()
+    assert "error" in body
+
+    error = body["error"]
+
+    assert error["code"] == "HTTP_409"
+
+    assert error["message"] == "Category already exists"
+
+    assert "trace_id" in error
+    assert isinstance(error["trace_id"], str)
+    assert error["trace_id"] != ""
+
 # tests/conftest.py
 
 from typing import Generator
