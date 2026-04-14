@@ -13,7 +13,7 @@ from app.core.errors import (
     validation_exception_handler,
     unhandled_exception_handler,
 )
-
+from fastapi.middleware.cors import CORSMiddleware
 from app.db.session import init_db
 from app.routers import auth, category, area, place, review, ranking
 
@@ -24,8 +24,6 @@ async def lifespan(app: FastAPI):
     init_db()
     yield
     # 서버 종료 시 처리할 게 있으면 여기서 하면 됨 (지금은 없음)
-
-
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -47,6 +45,7 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
     # 예외 핸들러
     app.add_exception_handler(StarletteHTTPException, http_exception_handler)
     app.add_exception_handler(RequestValidationError, validation_exception_handler)
