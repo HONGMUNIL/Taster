@@ -7,3 +7,4 @@ pydantic-settings>=2.3.4
 python-dotenv>=1.0.1
 psycopg[binary]>=3.2.1 ; platform_system != 'Windows'
 psycopg>=3.2.1 ; platform_system == 'Windows'
+bcrypt==4.3.0

@@ -60,25 +60,28 @@ def create_review(
     )
 
 
-
 @router.get("", response_model=List[ReviewRead], summary="리뷰 목록")
 def list_reviews(
         db: Session = Depends(get_db),
         place_id: Optional[int] = Query(None, description="특정 가게 리뷰만 추출"),
+        user_id: Optional[int] = Query(None, description="특정 사용자가 쓴 리뷰만 추출"),
         skip: int = Query(0, ge=0),
         limit: int = Query(20, ge=1, le=100),
 ):
     stmt = select(Review)
+
     if place_id is not None:
         stmt = stmt.where(Review.place_id == place_id)
+
+    if user_id is not None:
+        stmt = stmt.where(Review.user_id == user_id)
+
     stmt = stmt.order_by(Review.created_at.desc()).offset(skip).limit(limit)
 
     rows = db.exec(stmt).all()
 
-    # 작성자 이메일 넣기
     results: List[ReviewRead] = []
     for r in rows:
-        # 작성자 이메일 조회
         author = db.get(User, r.user_id)
         results.append(
             ReviewRead(
@@ -88,7 +91,6 @@ def list_reviews(
                 body=r.body,
                 created_at=r.created_at.isoformat(),
                 author_email=(author.email if author else None),
-
             )
         )
     return results
