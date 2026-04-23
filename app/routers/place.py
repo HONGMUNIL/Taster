@@ -177,3 +177,38 @@ def list_places(
 
     # 페이지 처리
     return places[skip : skip + limit]
+
+@router.get("/{place_id}", response_model=PlaceRead, summary="가게 상세 조회")
+def get_place(place_id: int, db: Session = Depends(get_db)):
+    print("get_place called:", place_id)
+
+    place = db.get(Place, place_id)
+    if not place:
+        raise HTTPException(status_code=404, detail="Place not found")
+
+    area = db.get(Area, place.area_id)
+    category = db.get(Category, place.category_id) if place.category_id is not None else None
+
+    review_stmt = select(
+        func.avg(Review.rating),
+        func.count(Review.id),
+    ).where(Review.place_id == place_id)
+
+    avg_rating, review_count = db.exec(review_stmt).one()
+
+    avg_val = float(avg_rating) if avg_rating is not None else None
+    review_count_int = int(review_count or 0)
+
+    return PlaceRead(
+        id=place.id,
+        name=place.name,
+        area_id=place.area_id,
+        category_id=place.category_id,
+        area_name=(area.name if area else "알 수 없음"),
+        category_name=(category.name if category else None),
+        avg_rating=avg_val,
+        review_count=review_count_int,
+    )
+
+
+
