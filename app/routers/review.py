@@ -59,7 +59,6 @@ def create_review(
         author_email=current_user.email,
     )
 
-
 @router.get("", response_model=List[ReviewRead], summary="리뷰 목록")
 def list_reviews(
         db: Session = Depends(get_db),
