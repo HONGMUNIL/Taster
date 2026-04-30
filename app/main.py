@@ -15,7 +15,7 @@ from app.core.errors import (
 )
 from fastapi.middleware.cors import CORSMiddleware
 from app.db.session import init_db
-from app.routers import auth, category, area, place, review, ranking
+from app.routers import auth, category, area, place, review, ranking, ai
 
 
 @asynccontextmanager
@@ -62,7 +62,7 @@ def create_app() -> FastAPI:
     app.include_router(place.router)
     app.include_router(review.router)
     app.include_router(ranking.router)
-
+    app.include_router(ai.router)
     return app
 
 
@@ -75,3 +75,6 @@ app = create_app()
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+
+
+app.include_router(ai.router)
