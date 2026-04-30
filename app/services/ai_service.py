@@ -1,9 +1,11 @@
 import os
+from dotenv import load_dotenv
 
 from google import genai
 
 from app.schemas.ai import AIReviewSummary
 
+load_dotenv()
 
 def summarize_reviews_with_ai(review_bodies: list[str]) -> AIReviewSummary:
     """
